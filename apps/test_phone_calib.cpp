@@ -18,7 +18,6 @@ int main(int argc, char** argv)
     
   vector< TriadData > acc_data_calib, gyro_data_calib;
   
-  // 从逗号分隔的文件中导入IMU数据
   cout<<"Importing IMU data from the comma separated file : "<< argv[1]<<endl;  
   importAsciiData( argv[1], acc_data_calib, gyro_data_calib, 
                    imu_tk::TIMESTAMP_UNIT_SEC, imu_tk::DATASET_COMMA_SEPARATED );

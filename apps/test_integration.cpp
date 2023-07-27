@@ -21,7 +21,7 @@ int main(int argc, char** argv)
   
   vector< TriadData > acc_data, gyro_data, mag_data;
   
-  cout << "Importing IMU data from file : " << argv[1] << endl;  
+  cout<<"Importing IMU data from file : "<< argv[1]<<endl;  
   importAsciiData( argv[1], acc_data, gyro_data, mag_data, 
                    imu_tk::TIMESTAMP_UNIT_USEC, imu_tk::DATASET_SPACE_SEPARATED);
   
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 
   for(int i = 0; i < gyro_data.size(); i++)
     gyro_data[i] = bias_calib.unbias(gyro_data[i]);
-  
+
   Vector3d mag_mean = dataMean( mag_data, DataInterval(100, 3000));
   
   Vis3D vis;
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     
     if( !(i%100) )
     {
-      std::cout << i / 100 << std::endl;
+      std::cout<<i/100<<std::endl;
     }
     if( !(i%5) )
     {

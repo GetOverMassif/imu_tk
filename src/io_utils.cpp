@@ -146,11 +146,11 @@ void imu_tk::importAsciiData ( const char *filename,
   ifstream infile;
   double ts, d[9];
 
-  infile.open(filename);
-  if(infile.is_open())
+  infile.open ( filename );
+  if ( infile.is_open() )
   {
     char format[266];
-    switch(type)
+    switch ( type )
     {
     case DATASET_COMMA_SEPARATED:
       sprintf ( format,"%%lf, %%lf, %%lf, %%lf, %%lf, %%lf, %%lf, %%lf, %%lf, %%lf" );
@@ -162,13 +162,13 @@ void imu_tk::importAsciiData ( const char *filename,
     }
 
     int l = 0;
-    while(getline(infile, line))
+    while ( getline ( infile,line ) )
     {
-      int res = sscanf( line.data(), format, &ts, &d[0], &d[1], &d[2],
-                        &d[3], &d[4], &d[5], &d[6], &d[7], &d[8]);
+      int res = sscanf ( line.data(), format, &ts, &d[0], &d[1], &d[2],
+                         &d[3], &d[4], &d[5], &d[6], &d[7], &d[8] );
       if ( res != 10 )
       {
-        cout << "importAsciiData(): error importing data in line " << l << ", exit" <<endl;
+        cout<<"importAsciiData(): error importing data in line "<<l<<", exit"<<endl;
       }
       else
       {
