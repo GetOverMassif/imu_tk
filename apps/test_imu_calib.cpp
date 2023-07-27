@@ -22,20 +22,26 @@ int main(int argc, char** argv)
   cout<<"Importing IMU data from the Matlab matrix file : "<< argv[2]<<endl;  
   importAsciiData( argv[2], gyro_data, imu_tk::TIMESTAMP_UNIT_SEC  );
   
-  
+  // 首先给加速度标定参数设置偏移量， 给陀螺仪标定参数设置比例因子
   CalibratedTriad init_acc_calib, init_gyro_calib;
   init_acc_calib.setBias( Vector3d(32768, 32768, 32768) );
   init_gyro_calib.setScale( Vector3d(1.0/6258.0, 1.0/6258.0, 1.0/6258.0) );
   
   MultiPosCalibration mp_calib;
-    
+  
+  // 设置初始静态间隔的持续时间(以秒为单位)。默认30秒
   mp_calib.setInitStaticIntervalDuration(50.0);
+  // 设置加速度计、陀螺仪的初始猜测校准参数
   mp_calib.setInitAccCalibration( init_acc_calib );
-  mp_calib.setInitGyroCalibration( init_gyro_calib );  
+  mp_calib.setInitGyroCalibration( init_gyro_calib );
+  // 设置重力加速度
   mp_calib.setGravityMagnitude(9.81744);
+  // 激活详细输出
   mp_calib.enableVerboseOutput(true);
+  // 如果参数为true，则使用每个静态间隔的平均加速度而不是所有样本来获得加速度计校准。默认为false。
   mp_calib.enableAccUseMeans(false);
   //mp_calib.setGyroDataPeriod(0.01);
+  // 进行标定
   mp_calib.calibrateAccGyro(acc_data, gyro_data );
   mp_calib.getAccCalib().save("test_imu_acc.calib");
   mp_calib.getGyroCalib().save("test_imu_gyro.calib");

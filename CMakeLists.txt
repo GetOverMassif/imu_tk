@@ -3,6 +3,12 @@ project(imu_tk)
 cmake_minimum_required (VERSION 2.8) 
 cmake_policy(SET CMP0015 NEW)
 
+# 设置使用C++17标准
+set(CMAKE_CXX_STANDARD 17)
+
+# 设置为调试模式
+set(CMAKE_BUILD_TYPE "Debug")
+
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
   set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -12,13 +18,13 @@ if(NOT DEFINED BUILD_IMU_TK_EXAMPLES)
 endif(NOT DEFINED BUILD_IMU_TK_EXAMPLES)
 
 find_package(Boost REQUIRED)  
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Ceres REQUIRED)
 
 include_directories(./include
                     /usr/include
                     ${Boost_INCLUDE_DIRS}
-                    ${EIGEN_INCLUDE_DIR}
+                    ${EIGEN3_INCLUDE_DIR}
                     ${CERES_INCLUDE_DIRS})
 
 #Vis3D

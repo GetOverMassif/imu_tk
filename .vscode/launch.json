@@ -1,0 +1,17 @@
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//       {
+//         "name": "C++ Launch",
+//         "type": "cppdbg",
+//         "request": "launch",
+//         "program": "${workspaceFolder}/bin/test_imu_calib",
+//         "args": ["test_data/xsens_acc.mat","test_data/xsens_gyro.mat"],
+//         "stopAtEntry": true,
+//         "cwd": "/home/lj/Documents/imu_tk/bin",
+//         "externalConsole": false,
+//         "MIMode": "gdb",
+//         "miDebuggerPath": "/usr/bin/gdb"
+//       }
+//     ]
+// }
