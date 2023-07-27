@@ -293,17 +293,22 @@ template <typename _T>
   *        Only intervals with at least interval_n_samps samples are considered.
   * 
   * @param samples Input signal (data samples vector)
+  *                输入信号（数据样本向量）
   * @param intervals Input intervals vector
+  *                  输入间隔向量
   * @param[out] extracted_samples Output signal that contains the extracted samples
+  *                               包含提取样本的输出信号
   * @param[out] extracted_intervals Output intervals vector with all the used intervals, i.e. 
   *                                 intervals with size at least interval_n_samps samples
+  *                                 包含所有使用间隔的输出间隔向量，即至少包含interval_n_samps个样本的间隔
   * @param interval_n_samps Number of samples to be extracted from each interval (or 
   *                         interval size to be used to compute the local mean if
   *                         only_means is set to true)
+  *                         从每个间隔中提取的样本数（或仅当only_means设置为true时用于计算局部均值的间隔大小）
   * @param only_means If true, extract for each interval only the local mean, computed 
   *                   in intervals with size at least interval_n_samps samples. The timestamp is
   *                   the one of the center of the interval.
-  * 
+  *                   如果为true，则仅从至少包含interval_n_samps个样本的间隔中提取每个间隔的局部均值。时间戳是间隔中心的时间戳。
   */
 template <typename _T> 
   void extractIntervalsSamples ( const std::vector< TriadData_<_T> > &samples,
@@ -389,6 +394,7 @@ template <typename _T>
                                  int interval_n_samps, bool only_means )
 {
   // Check for valid intervals  (i.e., intervals with at least interval_n_samps samples)
+  // 检查有效间隔（每个至少包含interval_n_samps个样本的间隔）
   int n_valid_intervals = 0, n_static_samples;
   for( int i = 0; i < intervals.size(); i++)
   {
@@ -407,6 +413,7 @@ template <typename _T>
   extracted_intervals.reserve(n_valid_intervals);
   
   // For each valid interval, extract the first interval_n_samps samples
+  // 对于每个有效的间隔，提取前interval_n_samps个样本
   for( int i = 0; i < intervals.size(); i++)
   {
     int interval_size = intervals[i].end_idx - intervals[i].start_idx + 1;
@@ -417,7 +424,9 @@ template <typename _T>
       {
         DataInterval mean_inerval( intervals[i].start_idx, intervals[i].end_idx );
         // Take the timestamp centered in the interval where the mean is computed
+        // 计算出时间间隔中间的时间戳
         _T timestamp = samples[ intervals[i].start_idx + interval_size/2 ].timestamp();
+        // 求出均值
         Eigen::Matrix< _T, 3, 1> mean_val = dataMean ( samples, mean_inerval );
         extracted_samples.push_back( TriadData_<_T>(timestamp, mean_val ) );
       }
