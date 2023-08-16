@@ -9,9 +9,9 @@ set(CMAKE_CXX_STANDARD 17)
 # 设置为调试模式
 set(CMAKE_BUILD_TYPE "Debug")
 
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
+# if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
+#   set(CMAKE_BUILD_TYPE "Release")
+# endif()
 
 if(NOT DEFINED BUILD_IMU_TK_EXAMPLES)
   set(BUILD_IMU_TK_EXAMPLES "ON")

@@ -17,9 +17,9 @@ int main(int argc, char** argv)
 
   vector< TriadData > acc_data, gyro_data;
   
-  cout<<"Importing IMU data from the Matlab matrix file : "<< argv[1]<<endl;  
+  cout << "Importing IMU data from the Matlab matrix file : " << argv[1] << endl;  
   importAsciiData( argv[1], acc_data, imu_tk::TIMESTAMP_UNIT_SEC );
-  cout<<"Importing IMU data from the Matlab matrix file : "<< argv[2]<<endl;  
+  cout << "Importing IMU data from the Matlab matrix file : " << argv[2] << endl;  
   importAsciiData( argv[2], gyro_data, imu_tk::TIMESTAMP_UNIT_SEC  );
   
   // 首先给加速度标定参数设置偏移量， 给陀螺仪标定参数设置比例因子

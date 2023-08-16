@@ -2,3 +2,6 @@ build/
 
 bin/test_imu_calib
 bin/test_integration
+
+install/
+log/
