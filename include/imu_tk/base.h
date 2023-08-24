@@ -186,11 +186,14 @@ struct DataInterval
     
     _T end_ts = samples[0].timestamp() + duration;
     int end_idx;
+    // 如果 采样起始时间 + duration >= 采样结束时间，指定 end_idx 为最后一个
     if ( end_ts >=  samples[samples.size() - 1].timestamp() ) 
       end_idx = samples.size() - 1;
+    // 否则，获取 采样起始时间 + duration 对应的时间索引
     else
       end_idx = timeToIndex( samples, end_ts );
     
+    // 指定 start_idx, end_idx
     return DataInterval( 0, end_idx );
   };
  
@@ -355,6 +358,7 @@ template <typename _T>
   Eigen::Matrix< _T, 3, 1> dataMean( const std::vector< TriadData_<_T> >& samples, 
                                      const DataInterval& interval )
 {
+  // 又做了一次检查
   DataInterval rev_interval =  checkInterval( samples, interval );
   int n_samp = rev_interval.end_idx - rev_interval.start_idx + 1;
   Eigen::Matrix< _T, 3, 1> mean(0, 0, 0);
@@ -371,8 +375,11 @@ template <typename _T>
   Eigen::Matrix< _T, 3, 1> dataVariance( const std::vector< TriadData_<_T> >& samples, 
                                          const DataInterval& interval )
 {
+  // 对这个时间间隔再检查一次，获取采样数 n_samp
   DataInterval rev_interval =  checkInterval( samples, interval );
   int n_samp = rev_interval.end_idx - rev_interval.start_idx + 1;
+  
+  // 计算平均值、方差
   Eigen::Matrix< _T, 3, 1> mean = dataMean( samples, rev_interval );
   
   Eigen::Matrix< _T, 3, 1> variance(0, 0, 0);

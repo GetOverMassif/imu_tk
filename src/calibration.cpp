@@ -149,7 +149,7 @@ template <typename _T>
   verbose_output_(false){}
 
 template <typename _T>
-  bool MultiPosCalibration_<_T>::calibrateAcc ( const std::vector< TriadData_<_T> >& acc_samples )
+  bool MultiPosCalibration_<_T>::calibrateAcc ( const std::vector< TriadData_<_T> >& acc_samples, _T win_size )
 {
   // 加速度计标定
   cout<<"Accelerometers calibration: calibrating..."<<endl;
@@ -159,6 +159,7 @@ template <typename _T>
   
   int n_samps = acc_samples.size();
   
+  // 首先获取 start_idx, end_idx, 统计量方差, 标准差, min_cost
   DataInterval init_static_interval = DataInterval::initialInterval( acc_samples, init_interval_duration_ );
   Eigen::Matrix<_T, 3, 1> acc_variance = dataVariance( acc_samples, init_static_interval );
   _T norm_th = acc_variance.norm();
@@ -185,21 +186,29 @@ template <typename _T>
     acc_calib_params[7] = init_acc_calib_.biasY();
     acc_calib_params[8] = init_acc_calib_.biasZ();
     
+    // 创建所提取间隔的索引
     std::vector< DataInterval > extracted_intervals;
-    staticIntervalsDetector ( acc_samples, th_mult*norm_th, static_intervals );
+    // TODO: 指定窗口大小(需要大于10且为奇数), threshold?
+    // _T win_size = _T(51);
+    staticIntervalsDetector ( acc_samples, th_mult * norm_th, static_intervals, win_size);
     extractIntervalsSamples ( acc_samples, static_intervals, 
                               static_samples, extracted_intervals,
                               interval_n_samples_, acc_use_means_ );
     
     if(verbose_output_)
-      cout<<"Accelerometers calibration: extracted "<<extracted_intervals.size()
-          <<" intervals using threshold multiplier "<<th_mult<<" -> ";
+      cout << "Accelerometers calibration: extracted " << extracted_intervals.size()
+           << " intervals using threshold multiplier " << th_mult << " -> ";
     
     // TODO Perform here a quality test
     if( extracted_intervals.size() < min_num_intervals_)
     {
-      if( verbose_output_) cout<<"Not enough intervals, calibration is not possible"<<endl;
-      continue;
+
+        if( verbose_output_){
+            std::cout << "extracted_intervals.size() = " << extracted_intervals.size() << ", " 
+                        << "min_num_intervals_ = " << min_num_intervals_ << std::endl;
+            cout<<"Not enough intervals, calibration is not possible"<<endl;
+        } 
+        continue;
     }
     
     if( verbose_output_) cout<<"Trying calibrate... "<<endl;
@@ -226,7 +235,7 @@ template <typename _T>
       min_cost_static_intervals_ = static_intervals;
       min_cost_calib_params = acc_calib_params;
     }
-    cout<<"residual "<<summary.final_cost<<endl;
+    cout << "residual " << summary.final_cost << endl;
   }
   
   if( min_cost_th < 0 )
@@ -272,14 +281,15 @@ template <typename _T>
 // TODO: 关键，加速度计和陀螺仪标定过程
 template <typename _T> 
   bool MultiPosCalibration_<_T>::calibrateAccGyro ( const vector< TriadData_<_T> >& acc_samples, 
-                                                   const vector< TriadData_<_T> >& gyro_samples )
+                                                   const vector< TriadData_<_T> >& gyro_samples,
+                                                   _T win_size)
 {
   // 首先对加速度计进行标定
-  if( !calibrateAcc( acc_samples ) )
+  if( !calibrateAcc( acc_samples, win_size ) )
     return false;
   
   // 然后对陀螺仪进行标定
-  cout<<"Gyroscopes calibration: calibrating..."<<endl;
+  cout<<"Gyroscopes calibration: calibrating..." << endl;
   
   std::vector< TriadData_<_T> > static_acc_means;
   std::vector< DataInterval > extracted_intervals;
